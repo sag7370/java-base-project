@@ -1,4 +1,4 @@
-package bigzhou.interfaces;
+package online.bigzhouzhou.interfaces;
 
 import javax.swing.*;
 import java.awt.*;

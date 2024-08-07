@@ -1,4 +1,4 @@
-package bigzhou.interfaces;
+package online.bigzhouzhou.interfaces;
 
 import java.util.Arrays;
 

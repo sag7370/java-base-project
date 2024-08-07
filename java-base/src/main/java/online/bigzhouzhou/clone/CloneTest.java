@@ -1,4 +1,4 @@
-package bigzhou.clone;
+package online.bigzhouzhou.clone;
 
 /**
  * CloneTest类

@@ -1,4 +1,4 @@
-package bigzhou.lambda;
+package online.bigzhouzhou.lambda;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

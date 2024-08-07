@@ -1,4 +1,4 @@
-package bigzhou.innerClass;
+package online.bigzhouzhou.innerClass;
 
 import javax.swing.*;
 import java.awt.*;
