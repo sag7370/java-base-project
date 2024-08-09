@@ -1,4 +1,4 @@
-import online.bigzhouzhou.io.ResourceResolver;
+package online.bigzhouzhou.io;
 
 /**
  * TestResoureResolver类
