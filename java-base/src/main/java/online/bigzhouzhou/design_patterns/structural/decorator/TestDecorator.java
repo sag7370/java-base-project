@@ -15,4 +15,11 @@ public class TestDecorator {
         System.out.println(n1.getText());
         System.out.println(n2.getText());
     }
+
+    /**
+     * 装饰器模式
+     * 1. 动态给一个对象添加一些额外的职责。
+     * 2. 可以独立增加核心功能，也可以独立增加附加功能，二者互不影响。
+     * 3. 可以在运行期动态给核心功能增加任意个附加功能
+     */
 }
