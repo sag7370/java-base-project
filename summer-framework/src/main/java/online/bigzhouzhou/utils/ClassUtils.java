@@ -29,7 +29,7 @@ public class ClassUtils {
      * &#64;A
      * public @interface B {}
      *
-     * @B
+     * &#64;B
      * public class Hello {}
      * </code>
      */
@@ -38,6 +38,7 @@ public class ClassUtils {
         for (Annotation anno : target.getAnnotations()) {
             Class<? extends Annotation> annoType = anno.annotationType();
             if (!annoType.getPackageName().equals("java.lang.annotation")) {
+                // 如果不是@Annotation，继续递归查找
                 A found = findAnnotation(annoType, annoClass);
                 if (found != null) {
                     if (a != null) {

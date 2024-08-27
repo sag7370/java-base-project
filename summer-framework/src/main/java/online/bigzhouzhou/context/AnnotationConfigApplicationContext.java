@@ -37,7 +37,7 @@ public class AnnotationConfigApplicationContext {
         // 创建BeanName检测循环依赖
         this.creatingBeanNames = new HashSet<>();
 
-        // 创建@configuration类型的Bean
+        // 创建@configuration类型的Bean   工厂方法注入
         this.beans.values().stream()
                 .filter(this::isConfigurationDefinition).sorted().map(def -> {
                     // 创建Bean实例
@@ -45,13 +45,12 @@ public class AnnotationConfigApplicationContext {
                     return def.getName();
                 }).collect(Collectors.toList());
 
-        // 创建其他普通Bean
+        // 创建其他普通Bean，然后依次创建Bean实例
         List<BeanDefinition> defs = this.beans.values().stream()
                 // 过滤出instance == null 的BeanDefinition
                 .filter(def -> def.getInstance() == null)
                 .sorted().collect(Collectors.toList());
 
-        // 依次创建Bean实例
         defs.forEach(def -> {
             if (def.getInstance() == null) {
                 // 创建Bean
@@ -74,15 +73,16 @@ public class AnnotationConfigApplicationContext {
         // 创建方式：构造方法或工厂方法:
         Executable createFn = null;
         if (def.getFactoryName() == null) {
-            // by constructor:
+            // by constructor: 构造方法
             createFn = def.getConstructor();
         } else {
-            // by factory method:
+            // by factory method: 工厂方法
             createFn = def.getFactoryMethod();
         }
 
         // 创建参数:
         final Parameter[] parameters = createFn.getParameters();
+        // 参数的注解
         final Annotation[][] parametersAnnos = createFn.getParameterAnnotations();
         Object[] args = new Object[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
@@ -111,7 +111,7 @@ public class AnnotationConfigApplicationContext {
             // 参数类型:
             final Class<?> type = param.getType();
             if (value != null) {
-                // 参数是@Value:
+                // 参数是@Value:  从配置中获取
                 args[i] = this.propertyResolver.getRequiredProperty(value.value(), type);
             } else {
                 // 参数是@Autowired,查找依赖的BeanDefinition:
@@ -217,7 +217,7 @@ public class AnnotationConfigApplicationContext {
                 if (Modifier.isPrivate(mod)) {
                     throw new BeanDefinitionException("@Component class " + clazz.getName() + " must not be private.");
                 }
-
+                // 获取Bean名称 value有值取value  value无值取类名，首字母小写
                 String beanName = ClassUtils.getBeanName(clazz);
                 var def = new BeanDefinition(beanName, clazz, getSuitableConstructor(clazz), getOrder(clazz), clazz.isAnnotationPresent(Primary.class),
                         // named init / destroy method:
@@ -363,6 +363,7 @@ public class AnnotationConfigApplicationContext {
         // 获取 ComponentScanScan 注解
         ComponentScan scan = ClassUtils.findAnnotation(configClass, ComponentScan.class);
         final String[] scanPackages =
+                // 如果 scan 为空 或者  scan.value 为空
                 scan == null || scan.value().length == 0
                         // 默认当前类所在包
                         ? new String[]{configClass.getPackage().getName()}
@@ -377,7 +378,7 @@ public class AnnotationConfigApplicationContext {
             var rr = new ResourceResolver(pkg);
             List<String> classList = rr.scan(res -> {
                 String name = res.getName();
-                // 遇到以.class结尾的文件，就将其转换为Class全名
+                // 遇到以.class结尾的文件，就将其转换为Class全名   online.bigzhouzhou.context.OuterBean
                 if (name.endsWith(".class")) {
                     return name.substring(0, name.length() - 6)
                             .replace("/", ".")
