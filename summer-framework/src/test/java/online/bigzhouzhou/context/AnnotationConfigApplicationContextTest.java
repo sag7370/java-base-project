@@ -16,6 +16,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author SAg <br/>
  */
 public class AnnotationConfigApplicationContextTest {
+
+    @Test
+    public void testInitMethod() {
+        var ctx = new AnnotationConfigApplicationContext(ScanApplication.class, createPropertyResolver());
+        var bean1 = ctx.getBean(AnnotationInitBean.class);
+        var bean2 = ctx.getBean(SpecifyInitBean.class);
+        assertEquals("Scan App / v1.0", bean1.appName);
+        assertEquals("Scan App / v1.0", bean2.appName);
+    }
     @Test
     public void testCustomAnnotation() {
         var ctx = new AnnotationConfigApplicationContext(ScanApplication.class, createPropertyResolver());
